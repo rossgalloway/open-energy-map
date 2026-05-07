@@ -187,12 +187,6 @@ function App() {
       <header className="site-header">
         <div className="site-header-inner">
           <div className="site-brand">Open Energy Map</div>
-          <nav className="site-nav" aria-label="Main navigation">
-            <a href="#">Overview</a>
-            <a href="#">Data</a>
-            <a href="#">Methodology</a>
-            <a href="#">Contact</a>
-          </nav>
         </div>
       </header>
 
