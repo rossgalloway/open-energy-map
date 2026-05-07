@@ -1,44 +1,211 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Open Energy Map Prototype</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
-  body { font-family: Arial, sans-serif; }
+    * {
+      box-sizing: border-box;
+    }
 
-  svg { border: 1px solid #ddd; }
+    body {
+      margin: 0;
+      color: #1f2933;
+      background: #ffffff;
+      font-family: Arial, sans-serif;
+    }
 
-  .country {
-    stroke: #fff;
-    stroke-width: 0.5;
-    cursor: pointer;
-  }
+    .page {
+      width: min(1040px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0 56px;
+    }
 
-  .country:hover {
-    stroke: #333;
-    stroke-width: 1.5;
-  }
+    .site-header {
+      width: 100%;
+      background: #ffffff;
+      border-bottom: 1px solid #d7d7d2;
+    }
 
-  #tooltip {
-    position: absolute;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 8px 10px;
-    font-size: 13px;
-    pointer-events: none;
-    opacity: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
+    .site-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      width: min(1040px, calc(100% - 32px));
+      min-height: 64px;
+      margin: 0 auto;
+    }
+
+    .site-brand {
+      color: #111827;
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .site-nav a {
+      color: #4b5563;
+      text-decoration: none;
+    }
+
+    .site-nav a:hover {
+      color: #111827;
+    }
+
+    .page-title {
+      margin: 0 0 24px;
+      color: #111827;
+      font-size: 36px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-align: center;
+    }
+
+    .map-wrap {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin: 0 auto 28px;
+    }
+
+    svg {
+      display: block;
+      width: min(800px, 100%);
+      height: auto;
+    }
+
+    .country {
+      stroke: #3f3f3f;
+      stroke-width: 0.7;
+      cursor: pointer;
+      transition: fill 140ms ease;
+    }
+
+    .content {
+      max-width: 760px;
+      margin: 0 auto;
+      color: #374151;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .content p {
+      margin: 0 0 16px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      margin: 0 0 20px;
+      color: #4b5563;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      color: #111827;
+    }
+
+    .country-detail {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .country-detail h1 {
+      margin: 0 0 20px;
+      color: #111827;
+      font-size: 36px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 0 0 28px;
+    }
+
+    .data-card {
+      padding: 16px;
+      background: #ffffff;
+      border: 1px solid #d7d7d2;
+      border-radius: 8px;
+    }
+
+    .data-label {
+      margin: 0 0 8px;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .data-value {
+      margin: 0;
+      color: #111827;
+      font-size: 24px;
+      line-height: 1.1;
+      font-weight: 700;
+    }
+
+    .not-found {
+      max-width: 760px;
+      margin: 0 auto;
+      color: #374151;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    #tooltip {
+      position: absolute;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      font-size: 13px;
+      pointer-events: none;
+      opacity: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    @media (max-width: 560px) {
+      .site-header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 12px;
+        padding: 16px 0;
+      }
+
+      .site-nav {
+        flex-wrap: wrap;
+        gap: 12px 16px;
+      }
+
+      .data-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
+  <div id="root"></div>
+  <div id="tooltip"></div>
 
-<h2>Population Above Tier 4 Electricity Consumption</h2>
-<svg></svg>
-<div id="tooltip"></div>
-
-<script src="script.js"></script>
-
+  <script type="text/babel" src="script.js"></script>
 </body>
 </html>
