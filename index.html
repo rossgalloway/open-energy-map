@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Open Energy Map Prototype</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+  body { font-family: Arial, sans-serif; }
+
+  svg { border: 1px solid #ddd; }
+
+  .country {
+    stroke: #fff;
+    stroke-width: 0.5;
+    cursor: pointer;
+  }
+
+  .country:hover {
+    stroke: #333;
+    stroke-width: 1.5;
+  }
+
+  #tooltip {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    font-size: 13px;
+    pointer-events: none;
+    opacity: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  </style>
+</head>
+<body>
+
+<h2>Population Above Tier 4 Electricity Consumption</h2>
+<svg></svg>
+<div id="tooltip"></div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
