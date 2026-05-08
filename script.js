@@ -1,6 +1,6 @@
-const { useEffect, useMemo, useRef, useState } = React;
+const { useEffect, useRef, useState } = React;
 
-function EnergyMap({ countryRows, geoData }) {
+function EnergyMap({ countryRows, geoData, onCountryClick }) {
   const svgRef = useRef(null);
 
   useEffect(() => {
@@ -73,9 +73,9 @@ function EnergyMap({ countryRows, geoData }) {
         tooltip.style("opacity", 0);
       })
       .on("click", (event, d) => {
-        window.location.hash = `#/country/${d.properties.iso_a3}`;
+        onCountryClick(d);
       });
-  }, [countryRows, geoData]);
+  }, [countryRows, geoData, onCountryClick]);
 
   return (
     <div className="map-wrap">
@@ -84,61 +84,27 @@ function EnergyMap({ countryRows, geoData }) {
   );
 }
 
-function CountryDetail({ country }) {
-  if (!country) {
-    return (
-      <main className="page">
-        <section className="not-found">
-          <a className="back-link" href="#">Back to map</a>
-          <h1>Country not found</h1>
-          <p>No country data was found for this page.</p>
-        </section>
-      </main>
-    );
-  }
-
+function ClickModal({ onClose }) {
   return (
-    <main className="page">
-      <section className="country-detail">
-        <a className="back-link" href="#">Back to map</a>
-        <h1>{country.country_name}</h1>
-        <div className="data-grid">
-          <article className="data-card">
-            <p className="data-label">Country code</p>
-            <p className="data-value">{country.country_code || country.iso_a3}</p>
-          </article>
-          <article className="data-card">
-            <p className="data-label">Tier 4+ share</p>
-            <p className="data-value">
-              {Number.isFinite(country.tier4Share) ? d3.format(".1%")(country.tier4Share) : "No data"}
-            </p>
-          </article>
-          <article className="data-card">
-            <p className="data-label">Tier 4+ population</p>
-            <p className="data-value">
-              {Number.isFinite(country.tier4Population) ? d3.format(",")(country.tier4Population) : "No data"}
-            </p>
-          </article>
-        </div>
-        <div className="content">
-          <p>
-            This page can expand into country-level context, trend summaries,
-            source notes, and links to related energy access indicators.
-          </p>
-          <p>
-            The current mockup uses the same CSV as the map so each country page
-            is driven by the available dataset.
-          </p>
-        </div>
-      </section>
-    </main>
+    <div className="modal-backdrop" role="presentation" onClick={onClose}>
+      <div
+        className="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Country navigation notice"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <p>When you click, this will navigate to the country page.</p>
+        <button type="button" onClick={onClose}>Close</button>
+      </div>
+    </div>
   );
 }
 
 function App() {
   const [countryRows, setCountryRows] = useState([]);
   const [geoData, setGeoData] = useState(null);
-  const [route, setRoute] = useState(window.location.hash);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     d3.csv("map_data.csv").then((rows) => {
@@ -152,63 +118,17 @@ function App() {
     d3.json("custom.geo.json").then(setGeoData);
   }, []);
 
-  useEffect(() => {
-    const handleHashChange = () => setRoute(window.location.hash);
-
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
-
-  const countryByCode = useMemo(() => {
-    return new Map(countryRows.map((country) => [country.country_code, country]));
-  }, [countryRows]);
-
-  const geoCountryByCode = useMemo(() => {
-    if (!geoData) {
-      return new Map();
-    }
-
-    return new Map(geoData.features.map((feature) => [
-      feature.properties.iso_a3,
-      {
-        iso_a3: feature.properties.iso_a3,
-        country_name: feature.properties.name_long || feature.properties.name
-      }
-    ]));
-  }, [geoData]);
-
-  const countryCode = route.match(/^#\/country\/([^/]+)$/)?.[1];
-  const selectedCountry = countryCode
-    ? countryByCode.get(countryCode) || geoCountryByCode.get(countryCode)
-    : null;
-
   return (
     <>
-      <header className="site-header">
-        <div className="site-header-inner">
-          <div className="site-brand">Open Energy Map</div>
-        </div>
-      </header>
+      <main className="page">
+        <EnergyMap
+          countryRows={countryRows}
+          geoData={geoData}
+          onCountryClick={() => setIsModalOpen(true)}
+        />
+      </main>
 
-      {countryCode ? (
-        <CountryDetail country={selectedCountry} />
-      ) : (
-        <main className="page">
-          <h1 className="page-title">Population Above Tier 4 Electricity Consumption</h1>
-          <EnergyMap countryRows={countryRows} geoData={geoData} />
-          <section className="content" aria-label="Page content">
-            <p>
-              This page can introduce the dataset, summarize key regional patterns,
-              and provide context for interpreting electricity consumption access
-              across the continent.
-            </p>
-            <p>
-              Additional copy can describe methodology, caveats, source notes, or
-              next steps for exploring country-level energy access indicators.
-            </p>
-          </section>
-        </main>
-      )}
+      {isModalOpen && <ClickModal onClose={() => setIsModalOpen(false)} />}
     </>
   );
 }

@@ -23,48 +23,14 @@
     .page {
       width: min(1040px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 40px 0 56px;
-    }
-
-    .site-header {
-      width: 100%;
-      background: #ffffff;
-      border-bottom: 1px solid #d7d7d2;
-    }
-
-    .site-header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      width: min(1040px, calc(100% - 32px));
-      min-height: 64px;
-      margin: 0 auto;
-    }
-
-    .site-brand {
-      color: #111827;
-      font-size: 18px;
-      line-height: 1;
-      font-weight: 700;
-      letter-spacing: 0;
-    }
-
-    .page-title {
-      margin: 0 0 24px;
-      color: #111827;
-      font-size: 36px;
-      line-height: 1.1;
-      font-weight: 700;
-      letter-spacing: 0;
-      text-align: center;
+      padding: 32px 0;
     }
 
     .map-wrap {
       display: flex;
       justify-content: center;
       width: 100%;
-      margin: 0 auto 28px;
+      margin: 0 auto;
     }
 
     svg {
@@ -80,80 +46,6 @@
       transition: fill 140ms ease;
     }
 
-    .content {
-      max-width: 760px;
-      margin: 0 auto;
-      color: #374151;
-      font-size: 16px;
-      line-height: 1.65;
-    }
-
-    .content p {
-      margin: 0 0 16px;
-    }
-
-    .back-link {
-      display: inline-flex;
-      margin: 0 0 20px;
-      color: #4b5563;
-      font-size: 14px;
-      text-decoration: none;
-    }
-
-    .back-link:hover {
-      color: #111827;
-    }
-
-    .country-detail {
-      max-width: 760px;
-      margin: 0 auto;
-    }
-
-    .country-detail h1 {
-      margin: 0 0 20px;
-      color: #111827;
-      font-size: 36px;
-      line-height: 1.1;
-      letter-spacing: 0;
-    }
-
-    .data-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin: 0 0 28px;
-    }
-
-    .data-card {
-      padding: 16px;
-      background: #ffffff;
-      border: 1px solid #d7d7d2;
-      border-radius: 8px;
-    }
-
-    .data-label {
-      margin: 0 0 8px;
-      color: #6b7280;
-      font-size: 13px;
-      line-height: 1.2;
-    }
-
-    .data-value {
-      margin: 0;
-      color: #111827;
-      font-size: 24px;
-      line-height: 1.1;
-      font-weight: 700;
-    }
-
-    .not-found {
-      max-width: 760px;
-      margin: 0 auto;
-      color: #374151;
-      font-size: 16px;
-      line-height: 1.65;
-    }
-
     #tooltip {
       position: absolute;
       background: white;
@@ -165,18 +57,45 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
-    @media (max-width: 560px) {
-      .site-header-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: center;
-        gap: 12px;
-        padding: 16px 0;
-      }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(17, 24, 39, 0.38);
+      z-index: 10;
+    }
 
-      .data-grid {
-        grid-template-columns: 1fr;
-      }
+    .modal {
+      width: min(420px, 100%);
+      padding: 24px;
+      background: #ffffff;
+      border: 1px solid #d7d7d2;
+      border-radius: 8px;
+      box-shadow: 0 16px 40px rgba(17, 24, 39, 0.18);
+    }
+
+    .modal p {
+      margin: 0 0 20px;
+      color: #111827;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .modal button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0 14px;
+      color: #ffffff;
+      background: #111827;
+      border: 0;
+      border-radius: 6px;
+      font: inherit;
+      cursor: pointer;
     }
   </style>
 </head>
