@@ -94,7 +94,7 @@ function ClickModal({ onClose }) {
         aria-label="Country navigation notice"
         onClick={(event) => event.stopPropagation()}
       >
-        <p>When you click, this will navigate to the country page.</p>
+        <p>Clicking navigates to the country page.</p>
         <button type="button" onClick={onClose}>Close</button>
       </div>
     </div>
